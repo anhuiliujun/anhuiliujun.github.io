@@ -11,8 +11,9 @@ categories: http
 
 ### 如何通信
 当浏览器发送请求的时候，还是先封装http层，然后在ssl层给http报文加密，然后到了tcp层，当到达服务器的时候，服务器先是tcp层接到传输的报文，
-进而交给ssl层，会对其应用ssl解密，然后交给最上层的http。
+进而交给ssl层，会对其应用ssl解密，然后交给最上层的http。关于协议封装，详见[osi七层模型][osi-model]。
 
 对web服务器的实现来说，就是多了一层ssl，当接收到tcp的数据的时候，进行解密，剩下的都是http报文的解析，这与http协议一致。
 
 [tls-wiki]: https://zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%89%E5%85%A8
+[osi-model]: https://zh.wikipedia.org/wiki/OSI%E6%A8%A1%E5%9E%8B
