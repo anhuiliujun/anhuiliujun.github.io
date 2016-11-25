@@ -1,0 +1,18 @@
+---
+layout: post
+title:  "https理解"
+date:   2016-11-25 11:33:52 +0800
+categories: http
+---
+### 简介
+`https`就是`http`与[TLS][tls-wiki]的组合，用英文表述的合适理解是`http over ssl`，也即是让`http`运行在`ssl`之上。
+
+`http`与`ssl`本身都是应用层协议，而当我们说`https`的时候，他其实是在传输层（tcp）与http之间又加入了一层ssl。
+
+### 如何通信
+当浏览器发送请求的时候，还是先封装http层，然后在ssl层给http报文加密，然后到了tcp层，当到达服务器的时候，服务器先是tcp层接到传输的报文，
+进而交给ssl层，会对其应用ssl解密，然后交给最上层的http。
+
+对web服务器的实现来说，就是多了一层ssl，当接收到tcp的数据的时候，进行解密，剩下的都是http报文的解析，这与http协议一致。
+
+[tls-wiki]: https://zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%89%E5%85%A8
