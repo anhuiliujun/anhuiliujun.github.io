@@ -1,0 +1,39 @@
+---
+layout: post
+title:  "http缓存详解"
+date:   2016-11-28 16:15:52 +0800
+categories: http
+---
+### 背景
+尽管**http**协议本身很久都没有变过了，但是它不是从一开始就是这个样子的，我们目前所使用的版本大多是http1.1，但历史上出现过http0.9、http1.0等诸多版本，所以http协议的有些功能发展到现在，可能会存在对同一个问题的不同实现。
+
+缓存就是其中的一个。下面是一个缓存的大致过程：
+
+1. 接收——缓存从网络中读取抵达的请求报文。
+2. 解析——缓存对报文进行解析，提取出URL和各首部。
+3. 查询——缓存查看是否有本地副本可用，如果没有就获取一份副本。
+4. 新鲜度检测——缓存查看已缓存副本是否足够新鲜，如果不是，就询问服务器是否有任何更新。
+5. 创建响应——缓存会用新的首部和已缓存的主体来构建一条响应报文。
+6. 发送——缓存通过网络将响应发回给客户端。
+
+在**新鲜度检测**的过程中，此时本地副本是绝对存在的（不存在的话，上一步中就会向服务器获取一份并保存为本地副本），此时缓存会查看本地副本是否**够新鲜**，http1.0中，可能会查看响应首部Expires的过期日期是否已过，http1.1中可能会使用响应首部Cache-Control中的max-age推断出更为准确的过期日期。
+
+如果已经过期，此时缓存就会向服务器发送已过再验证（`revalidation`）请求，通常会使用`If-Modified-Since`或者`If-Non-Match`条件请求做验证。
+
+`If-Modified-Since`条件验证会将服务器响应首部的`Last-Modified`的值作为参数，而`If-Non-Match`条件验证则是将服务器响应首部的`ETag`作为参数。
+
+所以`If-Modified-Since`、`Last-Modified`与`If-Non-Match`、`ETag`都是做`revalidation`的，只有缓存发现本地副本已过期或者客户端的请求头中强制要求做`revalidation`的时候，才会触发条件验证。
+
+### 响应状态
+- 再验证命中：304 Not Modified (更新本地的过期日期等首部)
+- 再验证未命中：200 OK（更新本地副本）
+- 对象被删除：404 Not Found（删除本地副本）
+
+### 缓存控制
+服务器可以通过HTTP定义的几种方式来指定文档过期之前可以将其缓存多长时间。如下（优先级递减）：
+
+- Cache-Control: no-store（不允许缓存）
+- Cache-Control: no-cache （do not serve from cache without revalidation）
+- Cache-Control: must-revalidate（过期版本必须做revalidation）
+- Cache-Control: max-age （指定文档新鲜的秒数）
+- Expires：指定过期日期（不推荐使用）
