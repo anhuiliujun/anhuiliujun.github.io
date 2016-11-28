@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "url与资源"
+date:   2016-11-28 17:10:02 +0800
+categories: http
+---
+### what
+url全称是uniform resource loactor，翻译成中文就是统一资源定位符。其核心是locator，即定位。
+
+互联网上存在太多太多的资源，我们如何去给每个资源打个标记，以供人们方便的访问呢？url就是人们标示资源以及快捷访问资源的一种实现方案。
+
+### url的组成
+通常有如下三个部分：
+
+- 方案: 告知web客户端怎样访问资源（`how`）
+- 服务器位置: 告知web客户端资源位于何处（`where`）
+- 资源路径: 说明请求了服务器上的那个（`which`）特定资源
+
+标准语法：
+```
+scheme://user:password@host:port/path;params?query#frag
+```
+
+### URN
+URL实际上是URN（uniform resource name）的一个子集。
+URL通过描述资源的位置来标示资源，这样一旦资源转移了，原来的URL就出问题了。而URN则不然，它通过名称来标示资源，无论所要访问的对象搬到什么地方，URN都能为对象提供一个稳定的名称。
+
+URN只是一个概念，并没有给出具体的实现方案，`永久统一资源定位符`（persistent uniform resource locators，PURL）是用URL来实现URN的一个例子。其基本思想是在搜索资源的过程中引入另外一个中间层，通过一个中间资源定位符（resource locator）服务器对资源的实际URL进行登记与跟踪。客户端可以向定位符请求一个永久URL，定位符可以以一个资源作为响应，将客户端重定向到资源当前的实际URL上去。
+
+由于这种方式是一个极其浩大的过程，所以URL迁移到URN上的进程非常之缓慢。可预见的将来，估计都不会被采用。
