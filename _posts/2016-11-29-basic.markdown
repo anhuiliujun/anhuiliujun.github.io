@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "http基本认证"
+date:   2016-11-29 11:17:02 +0800
+categories: http
+---
+### 原理
+**http**提供了一个原生的质询/响应（challenge/response）框架，其过程如下：
+
+1. web应用收到一条HTTP请求报文，服务器没有按照请求执行动作，而是对用户发出质询响应，返回一条401 Unauthorized，并在WWW-Authenticate首部说明**如何**以及**在哪里**进行认证
+2. 当客户端授权服务器继续处理时，会重新发送请求，但是会在Authorization首部附上加密的密码和其他一些认证参数。
+3. 授权请求成功完成时，服务器会返回一个正常的状态码（eg: 200 OK）；对高级认证算法来说，可能还会在Authentication-Info首部附加一些额外的信息。
+
+下图描述了认证的详细过程：
+
+```
+sequenceDiagram
+client->>server: GET /xxx/yyy.jpg HTTP/1.1
+server->>client: HTTP/1.1 401 WWW-Authenticate: Basic realm="Family"
+client->>server: GET Authorization: Basic YndfhhsdYdfj
+server->>client: HTTP/1.1 200 OK
+```
+
+### 基本认证的问题
+1. 用户名密码是通过明文传输的。尽管在Authorization首部中会按照Base64(username:password)这种方式传输，但是这和明文传输无异，网络攻击者很容易将其解码。
+2. 即使密码是以更难理解的方式加密的，第三方用户仍然可以捕获被修改过的用户名和密码，然后重放给服务器，以获得对服务器的访问权。
+3. 基本认证没有提供任何针对代理和作为中间人的中间节点的防护措施，中间人可以不修改认证的首部，但是修改报文的其他部分，这样就严重的改变了事务的本质。
+4. 假冒服务器很容易骗过基本认证。这样攻击者就可以获取用户的用户名与密码，将其存储起来备用。
+
+所以尽管http协议提供了这种基本的认证方式，但是它只能用于公司内部网络中对安全性要求不高的情况，更好的安全认证方式是[https][https]。
+
+[https]: https://anhuiliujun.github.io/http/2016/11/27/https2.html
