@@ -28,7 +28,7 @@ categories: react
 
 如果button是一个Dom node的话，会转译如下
 
-```
+```javascript
 React.createElement(
     'button',
     {className: 'button button-blue'},
@@ -38,7 +38,7 @@ React.createElement(
 
 最后返回一个object表示此Dom node：
 
-```
+```javascript
 {
   type: 'button',
   props: {
@@ -63,7 +63,7 @@ React.createElement(
 </Button>
 ```
 
-```
+```javascript
 React.createElement(
     Button,
     {color: 'blue'},
@@ -73,7 +73,7 @@ React.createElement(
 
 最后返回一个object表示此Component instance
 
-```
+```javascript
 {
   type: Button,
   props: {
@@ -85,13 +85,13 @@ React.createElement(
 
 `createElement`的定义如下：
 
-```
+```javascript
 React.createElement(component, props : object, ...children)
 ````
 
 它的返回值如下：
 
-```
+```javascript
 {type: (string | ReactClass), props: Object}
 ```
 
@@ -104,7 +104,7 @@ React.createElement会将参数中的children数组放到最后的props中（只
 当React在渲染的时候，如果他发现元素（Element）的type为function或class，它就知道向组件（Component）去询问该组件会被渲染成什么元素，
 同时将props传给该组件。例如当他看到如下元素：
 
-```
+```javascript
 {
   type: Button,
   props: {
@@ -116,7 +116,7 @@ React.createElement会将参数中的children数组放到最后的props中（只
 
 它就会找到Button Component，最后这个Button可能会返回如下的元素：
 
-```
+```javascript
 {
   type: 'button',
   props: {
