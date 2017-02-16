@@ -1,0 +1,52 @@
+---
+layout: post
+title:  "js中的数据类型"
+date:   2017-02-16 17:00:02 +0800
+categories: javascript
+---
+### 数据类型
+
+* 原始数据类型
+    * Boolean
+    * Null
+    * Undefined
+    * Number
+    * String
+    * Symbol（es6）
+* 引用数据类型 Object
+
+需要注意的是
+
+* 原始数据类型都是immutable的，而引用类型是mutable的
+* 数据类型和typeof操作的取值是两回事。
+    * 虽然从数据类型上来说function是Object，但是typeof返回function
+    * 虽然从数据类型上来说null是Null，但是typeof却返回object
+
+### 数据类型的转换
+
+js中存在很多类型转换，有的是显式的，有的却是隐式的。
+
+* Boolean、Number、String函数显式转换
+* +（一元）操作符显式转换
+* parseInt、parseFloat显示转换
+* ==、>等操作符中的隐式转换
+* +（二元算术）操作符隐式转换
+
+概述：
+
+* +（一元）与Number相同，均为将值转换为Number类型，但是遇到不能转换的字符串时，会直接返回NaN
+* parseInt与parseFloat接受String类型的参数，他们解析到能解析的位置为止
+* +（[二元算术]）对于原始数据类型来说，如果包含String，则做字符串连接，否则做Number的算术运算，如果包含引用类型，则先转换为原始类型
+* ==、>会执行[Abstract Equality Comparison]
+
+```
++('123a') => NaN
+parseInt('123a') => 123
+true + false => 1
+true + '' => 'true'
+```
+
+[Abstract Equality Comparison]: http://ecma-international.org/ecma-262/7.0/#sec-abstract-equality-comparison
+[二元算术]: http://ecma-international.org/ecma-262/7.0/#sec-addition-operator-plus
+
+
